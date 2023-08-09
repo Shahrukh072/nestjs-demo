@@ -3,43 +3,25 @@ import { User } from "../interfaces";
 
 @Injectable()
 export class UsersService {
-  private USERS = new Map<number, User>();
+  private store = new Map<number, User>();
 
-  createUser(user: User) {
-    this.USERS.set(user.id, user);
-
-    return { message: "USER ADDED" };
+  addUser(user: User) {
+    this.store.set(user.id, user);
   }
 
-  findUser(id: number) {
-    const user = this.USERS.get(id);
-
-    if (!user) {
-      return { message: "USER NOT FOUND" };
-    }
-
-    return user;
+  getUser(id: number) {
+    return this.store.get(id);
   }
 
-  findUsers() {
-    return Array.from(this.USERS, ([_id, user]) => user);
+  getUsers() {
+    return Array.from(this.store).map(([_, user]) => user);
   }
 
-  updateUser(id: number, userUpdate: User) {
-    const user = this.USERS.get(id);
-
-    if (!user) {
-      return { message: "USER NOT FOUND" };
-    }
-
-    this.USERS.set(id, userUpdate);
-
-    return { message: "USER UPDATED" };
+  updateUser(id: number, user: User) {
+    this.store.set(id, user);
   }
 
   deleteUser(id: number) {
-    this.USERS.delete(id);
-
-    return { message: "USER DELETED" };
+    this.store.delete(id);
   }
 }
