@@ -9,6 +9,8 @@ import { StudentsController } from "./students.controller";
 import { UsersStore } from "./users.store";
 import { UsersService } from "./users/services/users.service";
 import { EnvConfig } from "./config";
+import { CacheStoreModule, StoreType } from "./cache-store";
+import { AppService } from "./app.service";
 
 // MOCK: database connection
 function createConnection(options = {}) {
@@ -25,12 +27,24 @@ function createConnection(options = {}) {
 
 @Module({ 
 
-  imports: [UsersModule, JobsModule, EmployersModule],
+  imports: [
+    UsersModule,
+    JobsModule,
+    EmployersModule,
+
+      // create a dynamic module with below options
+      CacheStoreModule.register({
+        storeName: "YT-APP",
+        storeType: StoreType.FILE,
+        storeDir: __dirname, // dist folder
+      }),
+  ],
   
   controllers: [UsersController, StudentsController, AuthController,  AlbumsController],
   providers: [
 
     UsersService,
+    AppService,
 
     { provide: "STORE", useClass: UsersStore, scope: Scope.TRANSIENT },
 
